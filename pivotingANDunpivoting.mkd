@@ -1,0 +1,83 @@
+# SQL: Converting Rows to Columns (and Vice Versa) Without PIVOT
+
+Converting rows to columns (pivoting) and columns to rows (unpivoting) are common data transformation tasks in SQL. While many modern SQL databases provide `PIVOT` and `UNPIVOT` functions, these are not universally available. This document explains how to achieve these transformations using standard SQL techniques.
+
+## Converting Rows to Columns (Pivoting)
+
+When you need to turn unique values from a column into new columns, and aggregate related data, you're pivoting.
+
+**Technique: Conditional Aggregation**
+
+This approach relies on using `CASE` statements within aggregate functions.
+
+**Example:**
+
+Suppose you have a table `sales` with columns `product`, `month`, and `quantity`:
+
+| product | month | quantity |
+|---------|-------|----------|
+| A       | Jan   | 10       |
+| B       | Jan   | 15       |
+| A       | Feb   | 20       |
+| B       | Feb   | 25       |
+| A       | Mar   | 30       |
+| B       | Mar   | 35       |
+
+You want to pivot this data to show the quantity sold for each product in each month:
+
+| product | Jan | Feb | Mar |
+|---------|-----|-----|-----|
+| A       | 10  | 20  | 30  |
+| B       | 15  | 25  | 35  |
+
+**SQL Query:**
+
+```sql
+SELECT
+    product,
+    SUM(CASE WHEN month = 'Jan' THEN quantity ELSE 0 END) AS Jan,
+    SUM(CASE WHEN month = 'Feb' THEN quantity ELSE 0 END) AS Feb,
+    SUM(CASE WHEN month = 'Mar' THEN quantity ELSE 0 END) AS Mar
+FROM
+    sales
+GROUP BY
+    product;
+
+```
+
+
+
+
+## Converting Columns to Rows (Unpivoting)
+Unpivoting is the reverse process of pivoting, where you turn columns into rows.
+
+**Technique: UNION ALL**
+
+This approach involves creating separate SELECT statements for each column you want to unpivot and then combining them using UNION ALL.
+
+```sql
+
+SELECT product, 'Jan' AS month, Jan AS quantity FROM sales
+UNION ALL
+SELECT product, 'Feb' AS month, Feb AS quantity FROM sales
+UNION ALL
+SELECT product, 'Mar' AS month, Mar AS quantity FROM sales;
+
+```
+
+
+Explanation:
+
+SELECT product, 'Jan' AS month, Jan AS quantity FROM sales: This SELECT statement creates rows for January, taking the Jan column as the quantity.
+UNION ALL: This operator combines the results of the SELECT statements without removing duplicates.
+The other SELECT statements repeat the process for February and March.
+Important Notes:
+
+Dynamic Columns: If the columns to be pivoted or unpivoted are dynamic (i.e., they change over time), you'll need to use dynamic SQL (e.g., stored procedures) to generate the queries dynamically.
+Performance: For large datasets, conditional aggregation can be less efficient than dedicated PIVOT functions. UNION ALL is generally efficient, but the query length can become unwieldy with many columns.
+Data Types: Ensure data types are compatible when using UNION ALL.
+Null Handling: Pay attention to how NULL values are handled in your data and adjust the queries accordingly.
+
+
+
+
