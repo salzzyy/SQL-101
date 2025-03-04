@@ -1,0 +1,51 @@
+# WHERE vs. HAVING Clauses in SQL
+
+Both `WHERE` and `HAVING` clauses are used to filter data in SQL, but they operate on different levels and at different stages of the query execution. Understanding their differences is crucial for writing efficient and accurate SQL queries.
+
+## WHERE Clause
+
+* **Purpose:** Filters individual rows *before* any grouping or aggregation takes place.
+* **Application:** Applied to individual rows based on specified conditions.
+* **Execution Order:** Executed *before* the `GROUP BY` and `HAVING` clauses.
+* **Usage:** Used to filter rows based on column values directly from the table.
+* **Example:**
+
+    ```sql
+    SELECT *
+    FROM employees
+    WHERE department = 'Sales' AND salary > 50000;
+    ```
+
+    In this example, the `WHERE` clause filters the `employees` table to include only rows where the `department` is 'Sales' and the `salary` is greater than 50000. These filtered rows are then used for subsequent operations.
+
+## HAVING Clause
+
+* **Purpose:** Filters aggregated rows *after* grouping and aggregation have been performed.
+* **Application:** Applied to groups of rows created by the `GROUP BY` clause.
+* **Execution Order:** Executed *after* the `GROUP BY` clause and aggregation functions.
+* **Usage:** Used to filter groups based on the results of aggregate functions (e.g., `COUNT()`, `SUM()`, `AVG()`, `MIN()`, `MAX()`).
+* **Example:**
+
+    ```sql
+    SELECT department, AVG(salary) AS average_salary
+    FROM employees
+    GROUP BY department
+    HAVING AVG(salary) > 60000;
+    ```
+
+    In this example, the `GROUP BY` clause groups the `employees` table by `department`. The `AVG(salary)` function calculates the average salary for each department. The `HAVING` clause then filters these grouped results, keeping only the departments where the average salary is greater than 60000.
+
+## Key Differences Summary
+
+| Feature        | WHERE Clause                   | HAVING Clause                  |
+| -------------- | ------------------------------ | ------------------------------ |
+| Application    | Individual rows                | Aggregated rows (groups)       |
+| Execution Order | Before `GROUP BY` and `HAVING` | After `GROUP BY` and aggregation |
+| Filtering      | Based on individual row values | Based on aggregate function results |
+
+## Points to Remember
+
+1.  **Execution Order:** The `WHERE` clause is executed *before* the `GROUP BY` and `HAVING` clauses. This means that the `WHERE` clause reduces the number of rows that are processed by the grouping and aggregation operations, improving performance.
+2.  **Aggregate Functions:** The `WHERE` clause cannot use aggregate functions. If you need to filter based on the results of an aggregate function, you must use the `HAVING` clause.
+3.  **`GROUP BY` Requirement:** The `HAVING` clause is typically used in conjunction with the `GROUP BY` clause. Without `GROUP BY`, `HAVING` might still function, but it would often behave similar to a `WHERE` clause applied to a single aggregated row.
+4.  **Clarity:** Use `WHERE` to filter rows before aggregation and `HAVING` to filter groups after aggregation. This makes your SQL queries more readable and maintainable.
