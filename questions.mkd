@@ -70,3 +70,58 @@ WHERE id NOT IN (
 
 ## Conclusion
 Identifying and handling duplicate records is essential for maintaining data integrity in SQL. By using `GROUP BY`, `HAVING`, `JOIN`, or `ROW_NUMBER()`, you can effectively detect and manage duplicates in a table.
+
+
+
+
+
+# Swapping Genders in an SQL Table
+
+## Problem Statement
+Given a table with a `Gender` column containing values such as 'Male' and 'Female', write an SQL query to swap the gender values, converting 'Male' to 'Female' and 'Female' to 'Male'.
+
+## Example Table: `Employees`
+| EmployeeID | Name   | Gender  |
+|------------|--------|---------|
+| 1          | Alice  | Female  |
+| 2          | Bob    | Male    |
+| 3          | Carol  | Female  |
+| 4          | David  | Male    |
+
+## Expected Output (After Swapping Genders)
+| EmployeeID | Name   | Gender  |
+|------------|--------|---------|
+| 1          | Alice  | Male    |
+| 2          | Bob    | Female  |
+| 3          | Carol  | Male    |
+| 4          | David  | Female  |
+
+
+
+
+
+
+## SQL Query to Swap Genders
+```sql
+UPDATE Employees
+SET Gender = CASE 
+    WHEN Gender = 'Male' THEN 'Female'
+    WHEN Gender = 'Female' THEN 'Male'
+    ELSE Gender 
+END;
+```
+
+## Explanation
+- The `CASE` statement checks the value of the `Gender` column:
+  - If it is 'Male', it updates it to 'Female'.
+  - If it is 'Female', it updates it to 'Male'.
+  - If the value is something else (e.g., NULL or other values), it remains unchanged.
+
+## When to Use
+- When you need to swap categorical values in a table efficiently.
+- Useful in data correction and transformation tasks.
+- Helps in testing scenarios where opposite gender data needs to be analyzed.
+
+## Precaution
+- Always take a backup before performing `UPDATE` operations.
+- Use `SELECT * FROM Employees;` before and after execution to verify changes.
