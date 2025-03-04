@@ -1,0 +1,81 @@
+# SQL WITH Clause
+
+## Introduction
+The `WITH` clause in SQL, also known as Common Table Expressions (CTEs), allows you to define temporary result sets that can be referenced within a `SELECT`, `INSERT`, `UPDATE`, or `DELETE` statement.
+
+## Syntax
+```sql
+WITH cte_name (column1, column2, ...) AS (
+    -- Query defining the CTE
+    SELECT column1, column2, ...
+    FROM table_name
+    WHERE condition
+)
+-- Using the CTE
+SELECT * FROM cte_name;
+```
+
+## Example Usage
+### 1. Simple CTE
+```sql
+WITH EmployeeCTE AS (
+    SELECT EmployeeID, Name, Salary
+    FROM Employees
+    WHERE Salary > 50000
+)
+SELECT * FROM EmployeeCTE;
+```
+
+### 2. CTE with Aggregation
+```sql
+WITH DepartmentSalary AS (
+    SELECT DepartmentID, AVG(Salary) AS AvgSalary
+    FROM Employees
+    GROUP BY DepartmentID
+)
+SELECT * FROM DepartmentSalary;
+```
+
+### 3. Recursive CTE
+```sql
+WITH RecursiveCTE (EmployeeID, ManagerID, Level) AS (
+    -- Base case
+    SELECT EmployeeID, ManagerID, 1 AS Level
+    FROM Employees
+    WHERE ManagerID IS NULL
+    
+    UNION ALL
+    
+    -- Recursive case
+    SELECT e.EmployeeID, e.ManagerID, r.Level + 1
+    FROM Employees e
+    INNER JOIN RecursiveCTE r ON e.ManagerID = r.EmployeeID
+)
+SELECT * FROM RecursiveCTE;
+```
+
+## Additional Example: Finding Top Earners in a Department
+```sql
+WITH TopEarners AS (
+    SELECT EmployeeID, Name, Salary, DepartmentID,
+           RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS Rank
+    FROM Employees
+)
+SELECT * FROM TopEarners WHERE Rank = 1;
+```
+
+## When to Use the `WITH` Clause
+Use the `WITH` clause when:
+- You need to simplify complex queries by breaking them into smaller, modular parts.
+- You want to avoid redundant subqueries and improve query performance.
+- You require recursion to process hierarchical or tree-structured data.
+- You need to perform multiple operations on the same dataset without re-evaluating it multiple times.
+- You want to improve query readability and maintainability.
+
+## Benefits of Using `WITH` Clause
+- Improves readability by breaking complex queries into modular parts.
+- Avoids redundant subqueries by defining reusable CTEs.
+- Supports recursion for hierarchical data processing.
+
+## Conclusion
+The `WITH` clause (CTE) is a powerful feature in SQL that enhances query structuring and execution efficiency. It is particularly useful for improving code maintainability and readability.

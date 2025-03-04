@@ -1,0 +1,72 @@
+## Different Types of Aggregate Functions in SQL
+Aggregate functions perform a calculation on a set of values and return a single value. Common aggregate functions include:
+
+### 1. COUNT()
+Counts the number of rows that match a specified condition.
+```sql
+SELECT COUNT(*) AS TotalEmployees FROM Employees;
+```
+**Rule:** Works with all data types but does not count NULL values unless `COUNT(*)` is used.
+
+### 2. SUM()
+Calculates the total sum of a numeric column.
+```sql
+SELECT SUM(Salary) AS TotalSalary FROM Employees;
+```
+**Rule:** Works only with numeric data types and ignores NULL values.
+
+### 3. AVG()
+Calculates the average value of a numeric column.
+```sql
+SELECT AVG(Salary) AS AverageSalary FROM Employees;
+```
+**Rule:** Ignores NULL values and works only with numeric columns.
+
+### 4. MIN()
+Finds the minimum value in a column.
+```sql
+SELECT MIN(Salary) AS LowestSalary FROM Employees;
+```
+**Rule:** Works with numeric, date/time, and string data types.
+
+### 5. MAX()
+Finds the maximum value in a column.
+```sql
+SELECT MAX(Salary) AS HighestSalary FROM Employees;
+```
+**Rule:** Works similarly to `MIN()`, supporting numeric, date/time, and string data types.
+
+### 6. GROUP BY with Aggregate Functions
+Aggregate functions are often used with `GROUP BY` to categorize data.
+```sql
+SELECT DepartmentID, AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DepartmentID;
+```
+**Rule:** Every column in the `SELECT` clause that is not inside an aggregate function must be in the `GROUP BY` clause.
+
+### 7. HAVING Clause with Aggregate Functions
+Used to filter results after aggregation.
+```sql
+SELECT DepartmentID, COUNT(EmployeeID) AS EmployeeCount
+FROM Employees
+GROUP BY DepartmentID
+HAVING COUNT(EmployeeID) > 10;
+```
+**Rule:** `HAVING` is used instead of `WHERE` when filtering based on aggregate functions.
+
+## When to Use the `WITH` Clause
+Use the `WITH` clause when:
+- You need to simplify complex queries by breaking them into smaller, modular parts.
+- You want to avoid redundant subqueries and improve query performance.
+- You require recursion to process hierarchical or tree-structured data.
+- You need to perform multiple operations on the same dataset without re-evaluating it multiple times.
+- You want to improve query readability and maintainability.
+
+## Benefits of Using `WITH` Clause
+- Improves readability by breaking complex queries into modular parts.
+- Avoids redundant subqueries by defining reusable CTEs.
+- Supports recursion for hierarchical data processing.
+
+## Conclusion
+The `WITH` clause (CTE) is a powerful feature in SQL that enhances query structuring and execution efficiency. It is particularly useful for improving code maintainability and readability.

@@ -1,0 +1,33 @@
+## Different Types of Aliases in SQL
+Aliases in SQL are used to assign temporary names to columns or tables to improve readability. There are two main types:
+
+### 1. Column Alias
+Used to rename a column in the output of a query.
+```sql
+SELECT EmployeeID, Name AS EmployeeName, Salary AS MonthlySalary
+FROM Employees;
+```
+
+### 2. Table Alias
+Used to assign a temporary name to a table, making complex queries more readable.
+```sql
+SELECT e.EmployeeID, e.Name, d.DepartmentName
+FROM Employees e
+JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+## When to Use the `WITH` Clause
+Use the `WITH` clause when:
+- You need to simplify complex queries by breaking them into smaller, modular parts.
+- You want to avoid redundant subqueries and improve query performance.
+- You require recursion to process hierarchical or tree-structured data.
+- You need to perform multiple operations on the same dataset without re-evaluating it multiple times.
+- You want to improve query readability and maintainability.
+
+## Benefits of Using `WITH` Clause
+- Improves readability by breaking complex queries into modular parts.
+- Avoids redundant subqueries by defining reusable CTEs.
+- Supports recursion for hierarchical data processing.
+
+## Conclusion
+The `WITH` clause (CTE) is a powerful feature in SQL that enhances query structuring and execution efficiency. It is particularly useful for improving code maintainability and readability.
