@@ -125,3 +125,49 @@ END;
 ## Precaution
 - Always take a backup before performing `UPDATE` operations.
 - Use `SELECT * FROM Employees;` before and after execution to verify changes.
+
+
+
+
+
+# Finding Employees with Salaries Greater Than Their Manager
+
+## Problem Statement
+Given an `Employees` table where each employee has a `ManagerID`, write an SQL query to find employees whose salary is greater than their respective manager's salary.
+
+## Example Table: `Employees`
+| EmployeeID | Name   | Salary | ManagerID |
+|------------|--------|--------|-----------|
+| 1          | Alice  | 90000  | NULL      |
+| 2          | Bob    | 60000  | 1         |
+| 3          | Carol  | 120000 | 1         |
+| 4          | David  | 70000  | 2         |
+| 5          | Eve    | 80000  | 2         |
+
+## Expected Output
+| EmployeeID | Name   | Salary | ManagerID |
+|------------|--------|--------|-----------|
+| 3          | Carol  | 120000 | 1         |
+| 5          | Eve    | 80000  | 2         |
+
+## SQL Query Using Self-Join
+```sql
+SELECT e.EmployeeID, e.Name, e.Salary, e.ManagerID
+FROM Employees e
+JOIN Employees m ON e.ManagerID = m.EmployeeID
+WHERE e.Salary > m.Salary;
+```
+
+## Explanation
+- The `Employees` table is joined with itself (`self-join`), treating one instance as the employee (`e`) and the other as the manager (`m`).
+- The `JOIN` condition `e.ManagerID = m.EmployeeID` ensures that we are comparing an employee’s salary with their direct manager.
+- The `WHERE` clause filters only those employees whose salary is greater than their manager’s salary.
+
+## When to Use
+- To analyze salary distributions and detect anomalies in hierarchical salary structures.
+- Useful in HR analytics for ensuring fair pay scales.
+- Can be extended to find employees earning more than a certain percentage of their manager's salary.
+
+## Precaution
+- Ensure that `ManagerID` values exist in `EmployeeID` to avoid `NULL` joins.
+- If `ManagerID` can be `NULL`, consider handling it using `LEFT JOIN` or filtering out `NULL` values in the `WHERE` clause.
