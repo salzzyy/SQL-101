@@ -1,0 +1,70 @@
+# SQL RANK and DENSE_RANK Functions
+
+## Introduction
+Ranking functions in SQL assign a rank to each row within a partition of a result set. The two most commonly used ranking functions are `RANK()` and `DENSE_RANK()`. These functions are useful for ranking records based on a specific column.
+
+## Syntax
+```sql
+RANK() OVER (PARTITION BY column ORDER BY column)
+DENSE_RANK() OVER (PARTITION BY column ORDER BY column)
+```
+
+## Difference Between RANK() and DENSE_RANK()
+| Function       | Skips Rank? | Behavior |
+|---------------|------------|----------|
+| `RANK()`      | Yes        | Assigns the same rank to duplicate values and skips ranks for the next row. |
+| `DENSE_RANK()`| No         | Assigns the same rank to duplicate values but does not skip ranks. |
+
+## Example Table: Employees
+| EmployeeID | Name  | Department | Salary |
+|------------|-------|------------|--------|
+| 1          | Alice | IT         | 70000  |
+| 2          | Bob   | IT         | 70000  |
+| 3          | Charlie | IT      | 60000  |
+| 4          | Dave  | HR         | 80000  |
+| 5          | Eve   | HR         | 75000  |
+| 6          | Frank | HR         | 75000  |
+
+## Example Usage of RANK()
+```sql
+SELECT Name, Department, Salary, 
+       RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS Rank
+FROM Employees;
+```
+### Output:
+| Name  | Department | Salary | Rank |
+|-------|------------|--------|------|
+| Dave  | HR         | 80000  | 1    |
+| Eve   | HR         | 75000  | 2    |
+| Frank | HR         | 75000  | 2    |
+| Alice | IT         | 70000  | 1    |
+| Bob   | IT         | 70000  | 1    |
+| Charlie | IT      | 60000  | 3    |
+
+- Notice that `Rank = 2` is assigned to both Eve and Frank, but the next rank is skipped (`Rank = 3`).
+
+## Example Usage of DENSE_RANK()
+```sql
+SELECT Name, Department, Salary, 
+       DENSE_RANK() OVER (PARTITION BY Department ORDER BY Salary DESC) AS DenseRank
+FROM Employees;
+```
+### Output:
+| Name  | Department | Salary | DenseRank |
+|-------|------------|--------|-----------|
+| Dave  | HR         | 80000  | 1         |
+| Eve   | HR         | 75000  | 2         |
+| Frank | HR         | 2         |
+| Alice | IT         | 70000  | 1         |
+| Bob   | IT         | 1         |
+| Charlie | IT      | 60000  | 2         |
+
+- `DENSE_RANK()` assigns consecutive ranking values without skipping any numbers.
+
+## When to Use RANK() vs. DENSE_RANK()
+- Use `RANK()` when you need ranking gaps for duplicate values.
+- Use `DENSE_RANK()` when you need consecutive ranking numbers without gaps.
+
+## Conclusion
+Both `RANK()` and `DENSE_RANK()` are useful for ranking operations in SQL. The choice depends on whether you want gaps in ranking (`RANK()`) or continuous ranking (`DENSE_RANK()`).
+

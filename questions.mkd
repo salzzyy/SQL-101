@@ -1,0 +1,72 @@
+# Finding Duplicates in a SQL Table
+
+## Introduction
+Finding duplicate records in a table is a common SQL task. Duplicates can exist in one or multiple columns and can be identified using `GROUP BY`, `HAVING`, `JOIN`, or `ROW_NUMBER()`.
+
+## 1. Finding Duplicates Based on a Single Column
+If duplicates are identified based on a single column (e.g., `email` in a `Users` table):
+
+```sql
+SELECT email, COUNT(*) AS duplicate_count
+FROM Users
+GROUP BY email
+HAVING COUNT(*) > 1;
+```
+
+### Explanation:
+- Groups records by `email`.
+- Uses `HAVING COUNT(*) > 1` to filter only duplicate emails.
+
+## 2. Finding Duplicates Based on Multiple Columns
+If duplicates are determined based on more than one column (e.g., `first_name` and `last_name`):
+
+```sql
+SELECT first_name, last_name, COUNT(*) AS duplicate_count
+FROM Users
+GROUP BY first_name, last_name
+HAVING COUNT(*) > 1;
+```
+
+## 3. Finding Duplicate Rows with All Columns
+To check for completely identical rows:
+
+```sql
+SELECT *, COUNT(*) AS duplicate_count
+FROM Users
+GROUP BY first_name, last_name, email, phone
+HAVING COUNT(*) > 1;
+```
+
+## 4. Finding Duplicate Records with IDs
+To retrieve duplicate records along with their `id` values:
+
+```sql
+SELECT u1.*
+FROM Users u1
+JOIN (
+    SELECT email
+    FROM Users
+    GROUP BY email
+    HAVING COUNT(*) > 1
+) u2
+ON u1.email = u2.email
+ORDER BY u1.email;
+```
+
+## 5. Deleting Duplicate Rows (Keeping One)
+To delete duplicates but keep one unique entry:
+
+```sql
+DELETE FROM Users
+WHERE id NOT IN (
+    SELECT MIN(id)
+    FROM Users
+    GROUP BY email
+);
+```
+
+### Explanation:
+- The subquery selects the smallest `id` for each duplicate group and keeps only the first occurrence.
+
+## Conclusion
+Identifying and handling duplicate records is essential for maintaining data integrity in SQL. By using `GROUP BY`, `HAVING`, `JOIN`, or `ROW_NUMBER()`, you can effectively detect and manage duplicates in a table.

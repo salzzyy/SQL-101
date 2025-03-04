@@ -1,0 +1,60 @@
+# SQL UNION vs UNION ALL
+
+## Introduction
+In SQL, `UNION` and `UNION ALL` are used to combine the results of two or more `SELECT` queries. However, there are key differences between them in terms of how they handle duplicates and performance.
+
+## 1. UNION
+The `UNION` operator combines the results of two `SELECT` queries and removes duplicate rows from the final result set.
+
+### Syntax:
+```sql
+SELECT column1, column2 FROM table1
+UNION
+SELECT column1, column2 FROM table2;
+```
+
+### Example:
+```sql
+SELECT name FROM Employees
+UNION
+SELECT name FROM Managers;
+```
+### Key Points:
+- Removes duplicate rows.
+- Sorts the final result set.
+- Performance is slightly slower due to duplicate elimination.
+
+## 2. UNION ALL
+The `UNION ALL` operator combines results of two `SELECT` queries but **does not** remove duplicates.
+
+### Syntax:
+```sql
+SELECT column1, column2 FROM table1
+UNION ALL
+SELECT column1, column2 FROM table2;
+```
+
+### Example:
+```sql
+SELECT name FROM Employees
+UNION ALL
+SELECT name FROM Managers;
+```
+### Key Points:
+- Keeps all duplicate rows.
+- Does not sort the final result set.
+- Performance is faster as no duplicate elimination is performed.
+
+## 3. Key Differences Between UNION and UNION ALL
+| Feature          | UNION  | UNION ALL |
+|-----------------|--------|-----------|
+| Duplicate Rows  | Removed | Kept |
+| Sorting         | Yes (Implicit) | No |
+| Performance     | Slower (due to sorting and duplicate removal) | Faster |
+
+## 4. When to Use Which?
+- Use `UNION` when you need **unique** values in the final output.
+- Use `UNION ALL` when performance is a priority, and duplicates are acceptable.
+
+## Conclusion
+Both `UNION` and `UNION ALL` serve the purpose of merging datasets, but `UNION ALL` is preferred when performance is key, and duplicate handling is not required.

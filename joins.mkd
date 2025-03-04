@@ -1,0 +1,151 @@
+# Different Types of Joins in SQL
+
+## Introduction
+Joins in SQL are used to combine rows from two or more tables based on a related column. There are different types of joins that serve different purposes.
+
+## 1. INNER JOIN
+- Returns only the matching rows between the tables.
+- Excludes non-matching records from both tables.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+INNER JOIN TableB B ON A.common_column = B.common_column;
+```
+
+### Example:
+```sql
+SELECT Employees.Name, Departments.DepartmentName
+FROM Employees
+INNER JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID;
+```
+
+### When to Use:
+- When you only need matching records from both tables.
+- Useful for filtering data with relationships.
+
+---
+
+## 2. LEFT JOIN (OUTER JOIN)
+- Returns all records from the left table and matching records from the right table.
+- If no match is found, NULL values are returned from the right table.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+LEFT JOIN TableB B ON A.common_column = B.common_column;
+```
+
+### Example:
+```sql
+SELECT Employees.Name, Departments.DepartmentName
+FROM Employees
+LEFT JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID;
+```
+
+### When to Use:
+- When you need all records from the left table and only the matching records from the right table.
+- Useful for finding unmatched records in the right table.
+
+---
+
+## 3. RIGHT JOIN (OUTER JOIN)
+- Returns all records from the right table and matching records from the left table.
+- If no match is found, NULL values are returned from the left table.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+RIGHT JOIN TableB B ON A.common_column = B.common_column;
+```
+
+### Example:
+```sql
+SELECT Employees.Name, Departments.DepartmentName
+FROM Employees
+RIGHT JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID;
+```
+
+### When to Use:
+- When you need all records from the right table and only the matching records from the left table.
+- Useful for finding unmatched records in the left table.
+
+---
+
+## 4. FULL JOIN (FULL OUTER JOIN)
+- Returns all records when there is a match in either left or right table.
+- If no match is found, NULL values are returned for missing values from either table.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+FULL JOIN TableB B ON A.common_column = B.common_column;
+```
+
+### Example:
+```sql
+SELECT Employees.Name, Departments.DepartmentName
+FROM Employees
+FULL JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID;
+```
+
+### When to Use:
+- When you need all records from both tables.
+- Useful for merging datasets with potential missing values.
+
+---
+
+## 5. CROSS JOIN
+- Returns the Cartesian product of both tables.
+- Every row in Table A is combined with every row in Table B.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+CROSS JOIN TableB B;
+```
+
+### Example:
+```sql
+SELECT Employees.Name, Departments.DepartmentName
+FROM Employees
+CROSS JOIN Departments;
+```
+
+### When to Use:
+- When you need all possible combinations of rows.
+- Useful for scenarios like generating test data or permutations.
+
+---
+
+## 6. SELF JOIN
+- A table is joined with itself.
+- Used when comparing rows within the same table.
+
+### Syntax:
+```sql
+SELECT A.column1, B.column2
+FROM TableA A
+INNER JOIN TableA B ON A.common_column = B.common_column;
+```
+
+### Example:
+```sql
+SELECT E1.Name AS Employee, E2.Name AS Manager
+FROM Employees E1
+INNER JOIN Employees E2 ON E1.ManagerID = E2.EmployeeID;
+```
+
+### When to Use:
+- When working with hierarchical or related data within the same table.
+- Useful for employee-manager relationships, product dependencies, etc.
+
+---
+
+## Conclusion
+Understanding different types of SQL joins is essential for retrieving meaningful data efficiently. Choosing the right join type depends on the dataset and the requirement of the query.

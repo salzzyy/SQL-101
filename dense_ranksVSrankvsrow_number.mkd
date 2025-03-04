@@ -1,0 +1,75 @@
+# Difference Between ROW_NUMBER(), RANK(), and DENSE_RANK()
+
+## Introduction
+`ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()` are window functions in SQL used for ranking rows within a partition of a result set. Each function serves a unique purpose when assigning ranks to records.
+
+## 1. ROW_NUMBER()
+- Assigns a unique sequential number to each row.
+- No gaps in numbering.
+- Restart numbering in each partition (if used).
+
+### Syntax:
+```sql
+SELECT column1, column2, 
+       ROW_NUMBER() OVER (PARTITION BY column ORDER BY column) AS row_num
+FROM table_name;
+```
+
+### Example:
+```sql
+SELECT EmployeeID, Name, Salary,
+       ROW_NUMBER() OVER (ORDER BY Salary DESC) AS row_num
+FROM Employees;
+```
+
+## 2. RANK()
+- Assigns a rank to each row with the same value.
+- If there are duplicate values, the next rank is skipped.
+- Ranking starts from 1.
+
+### Syntax:
+```sql
+SELECT column1, column2, 
+       RANK() OVER (PARTITION BY column ORDER BY column) AS rank
+FROM table_name;
+```
+
+### Example:
+```sql
+SELECT EmployeeID, Name, Salary,
+       RANK() OVER (ORDER BY Salary DESC) AS rank
+FROM Employees;
+```
+
+## 3. DENSE_RANK()
+- Assigns a rank like `RANK()`, but without gaps in ranking.
+- Duplicate values get the same rank, and the next rank continues sequentially.
+
+### Syntax:
+```sql
+SELECT column1, column2, 
+       DENSE_RANK() OVER (PARTITION BY column ORDER BY column) AS dense_rank
+FROM table_name;
+```
+
+### Example:
+```sql
+SELECT EmployeeID, Name, Salary,
+       DENSE_RANK() OVER (ORDER BY Salary DESC) AS dense_rank
+FROM Employees;
+```
+
+## 4. Key Differences
+| Feature        | ROW_NUMBER() | RANK() | DENSE_RANK() |
+|--------------|------------|-------|-------------|
+| Uniqueness   | Always unique | May have duplicates | May have duplicates |
+| Gaps in Ranking | No | Yes (skips ranks) | No (continuous ranking) |
+| Performance  | Best for unique row ordering | Best for ranking with gaps | Best for ranking without gaps |
+
+## 5. When to Use?
+- **`ROW_NUMBER()`**: When you need a unique row identifier without gaps.
+- **`RANK()`**: When you need rankings with gaps for duplicate values.
+- **`DENSE_RANK()`**: When you need rankings without gaps for duplicate values.
+
+## Conclusion
+Understanding these functions helps in ranking data efficiently based on different scenarios. Use them wisely depending on the ranking requirement in your SQL queries.
